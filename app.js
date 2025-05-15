@@ -7,7 +7,14 @@ const { NotFoundError, ExpressError } = require("./expressError");
 const app = express();
 
 app.use(express.json());
-app.use(cors());
+
+// CORS Configuration
+app.use(cors({
+    origin: "http://localhost:5173", // Adjust for your frontend URL
+    methods: ["GET", "POST"],
+    allowedHeaders: ["Content-Type"]
+}));
+
 app.use(morgan("dev"));
 
 app.use("/api", songRequestRoutes);
