@@ -1,5 +1,4 @@
 const pool = require("../db");
-const partialForSqlInsert = require("../helpers/partialForSql");
 const { BadRequestError } = require("../expressError");
 
 class SongRequestForm {
@@ -19,7 +18,6 @@ class SongRequestForm {
             VALUES ($1, $2, $3, $4, $5)
             RETURNING *;
         `;
-
         const values = [name, songTitle, artist, albumOrVersion || null, reason];
 
         try {
@@ -29,19 +27,19 @@ class SongRequestForm {
             throw new Error(`Database insertion error: ${err.message}`);
         }
     }
+
     async deleteRequest(id) {
         try {
             const result = await this.pool.query(
                 "DELETE FROM song_requests WHERE id = $1 RETURNING *",
                 [id]
             );
-    
-            return result.rows[0]; // Returns deleted row if found
+            return result.rows[0];
         } catch (err) {
             throw new Error(`Database deletion error: ${err.message}`);
         }
     }
-    
 }
 
-module.exports = SongRequestForm;
+// Export an instance of SongRequestForm
+module.exports = new SongRequestForm(pool);
