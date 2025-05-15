@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
-const songRequestRoutes = require("./routes/songRequests");
+const songRequestRoutes = require("./routes/songRequestRoute");
 const { NotFoundError, ExpressError } = require("./expressError");
 
 const app = express();
