@@ -2,31 +2,28 @@ const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
 const songRequestRoutes = require("./routes/songRequestRoute");
-const { NotFoundError, ExpressError } = require("./expressError");
+const mailingListRoutes = require("./routes/mailingList");
+const { NotFoundError } = require("./expressError");
 
 const app = express();
 
 app.use(express.json());
-
-// CORS Configuration
 app.use(cors({
     origin: "https://drwhateva.com",
     methods: ["GET", "POST"],
     allowedHeaders: ["Content-Type"]
 }));
-
 app.use(morgan("dev"));
 
 app.use("/api", songRequestRoutes);
+app.use("/api/mailing-list", mailingListRoutes);
 
 app.use((req, res, next) => {
     next(new NotFoundError());
 });
 
 app.use((err, req, res, next) => {
-    const status = err.status || 500;
-    const message = err.message || "Something went wrong";
-    res.status(status).json({ error: message });
+    res.status(err.status || 500).json({ error: err.message || "Something went wrong" });
 });
 
 module.exports = app;
