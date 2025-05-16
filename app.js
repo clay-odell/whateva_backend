@@ -8,11 +8,13 @@ const { NotFoundError } = require("./expressError");
 const app = express();
 
 app.use(express.json());
+const cors = require("cors");
 app.use(cors({
-    origin: "https://drwhateva.com",
-    methods: ["GET", "POST"],
-    allowedHeaders: ["Content-Type"]
+  origin: "https://drwhateva.com",
+  methods: "GET, POST, OPTIONS",
+  allowedHeaders: "Content-Type, Authorization"
 }));
+
 app.use(morgan("dev"));
 
 app.use("/api", songRequestRoutes);
