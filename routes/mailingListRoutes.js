@@ -1,5 +1,5 @@
 const express = require("express");
-const MailingList = require("../models/MailingList");
+const MailingList = require("../models/mailingList");
 const { BadRequestError } = require("../expressError");
 
 const router = express.Router();
