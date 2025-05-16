@@ -28,6 +28,16 @@ class SongRequestForm {
         }
     }
 
+    async getRequests() {
+        const query = "SELECT * FROM song_requests ORDER BY id DESC;";
+        try {
+          const result = await this.pool.query(query);
+          return result.rows;
+        } catch (err) {
+          throw new Error(`Database query error: ${err.message}`);
+        }
+      }
+
     async deleteRequest(id) {
         try {
             const result = await this.pool.query(

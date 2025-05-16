@@ -10,7 +10,7 @@ app.use(express.json());
 
 // CORS Configuration
 app.use(cors({
-    origin: "http://localhost:5173", // Adjust for your frontend URL
+    origin: "https://drwhateva.com",
     methods: ["GET", "POST"],
     allowedHeaders: ["Content-Type"]
 }));
