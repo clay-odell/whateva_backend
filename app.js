@@ -3,6 +3,7 @@ const cors = require("cors");
 const morgan = require("morgan");
 const songRequestRoutes = require("./routes/songRequestRoute");
 const mailingListRoutes = require("./routes/mailingListRoutes");
+const loginRoute = require("./routes/loginRoute"); // Import login route
 const { NotFoundError } = require("./expressError");
 
 const app = express();
@@ -19,6 +20,7 @@ app.use(morgan("dev"));
 
 app.use("/api", songRequestRoutes);
 app.use("/api/mailing-list", mailingListRoutes);
+app.use("/api/auth", loginRoute);
 
 app.use((req, res, next) => {
     next(new NotFoundError());
