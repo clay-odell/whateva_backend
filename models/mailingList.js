@@ -1,6 +1,5 @@
-
 const pool = require("../db");
-const { BadRequestError } = require("../expressError");
+const { BadRequestError, NotFoundError } = require("../expressError");
 
 class MailingList {
   constructor(pool) {
@@ -41,7 +40,7 @@ class MailingList {
       query += " WHERE " + conditions.join(" AND ");
     }
   
-    query += " ORDER BY email ASC"; // Sorted alphabetically for better retrieval
+    query += " ORDER BY email ASC";
   
     if (limit) {
       values.push(limit);
@@ -55,12 +54,36 @@ class MailingList {
   
     try {
       const result = await this.pool.query(query, values);
-      return result.rows.map(row => row.email); // Extracting only the email addresses
+      return result.rows.map(row => row.email);
     } catch (err) {
       throw new Error(`Database query error: ${err.message}`);
     }
   }
-  
+
+  async deleteSubscription(email) {
+    if (!email) {
+      throw new BadRequestError("Email is required");
+    }
+
+    const query = `
+      DELETE FROM mailing_list
+      WHERE email = $1
+      RETURNING email;
+    `;
+    const values = [email];
+
+    try {
+      const result = await this.pool.query(query, values);
+
+      if (result.rowCount === 0) {
+        throw new NotFoundError(`No subscription found for ${email}`);
+      }
+
+      return { message: `Subscription for ${email} deleted.` };
+    } catch (err) {
+      throw new Error(`Database deletion error: ${err.message}`);
+    }
+  }
 }
 
 module.exports = new MailingList(pool);
